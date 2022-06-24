@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.sheet.SheetModelMapper">
+
+    <resultMap type="SheetModel" id="SheetModelResult">
+        <result property="id"    column="id"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="modelName"    column="model_name"    />
+        <result property="content"    column="content"    />
+        <result property="jsonContent"    column="content"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+
+
+    <sql id="selectSheetModelVo">
+        select id, model_id, model_name, content, create_user, create_time, status from sheet_model
+    </sql>
+
+    <select id="selectSheetModelList" parameterType="SheetModel" resultMap="SheetModelResult">
+        select id, model_id, model_name, content,
+               (select nick_name from sys_user where user_id = create_user) create_user, create_time, status from sheet_model
+        <where>
+            <if test="modelId != null  and modelId != ''"> and model_id = #{modelId}</if>
+            <if test="modelName != null  and modelName != ''"> and model_name like concat('%', #{modelName}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectSheetModelById" parameterType="Long" resultMap="SheetModelResult">
+        <include refid="selectSheetModelVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSheetModel" parameterType="SheetModel" useGeneratedKeys="true" keyProperty="id">
+        insert into sheet_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="modelId != null">model_id,</if>
+            <if test="modelName != null">model_name,</if>
+            <if test="content != null">content,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="modelId != null">#{modelId},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="jsonContent != null">#{jsonContent},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSheetModel" parameterType="SheetModel">
+        update sheet_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSheetModelById" parameterType="Long">
+        delete from sheet_model where id = #{id}
+    </delete>
+
+    <delete id="deleteSheetModelByIds" parameterType="String">
+        delete from sheet_model where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

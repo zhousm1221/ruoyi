@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.sheet.SheetInstMapper">
+
+    <resultMap type="SheetInst" id="SheetInstResult">
+        <result property="id"    column="id"    />
+        <result property="instId"    column="inst_id"    />
+        <result property="topic"    column="topic"    />
+        <result property="modelId"    column="model_id"    />
+        <result property="content"    column="content"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSheetInstVo">
+        select id, inst_id, topic, model_id, content, create_user, create_time from sheet_inst
+    </sql>
+
+    <select id="selectSheetInstList" parameterType="SheetInst" resultMap="SheetInstResult">
+        <include refid="selectSheetInstVo"/>
+        <where>
+            <if test="instId != null  and instId != ''"> and inst_id = #{instId}</if>
+            <if test="topic != null  and topic != ''"> and topic = #{topic}</if>
+            <if test="modelId != null  and modelId != ''"> and model_id = #{modelId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+        </where>
+    </select>
+
+    <select id="selectSheetInstById" parameterType="Long" resultMap="SheetInstResult">
+        <include refid="selectSheetInstVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSheetInst" parameterType="SheetInst" useGeneratedKeys="true" keyProperty="id">
+        insert into sheet_inst
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="instId != null">inst_id,</if>
+            <if test="topic != null">topic,</if>
+            <if test="modelId != null">model_id,</if>
+            <if test="jsonContent != null">content,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="instId != null">#{instId},</if>
+            <if test="topic != null">#{topic},</if>
+            <if test="modelId != null">#{modelId},</if>
+            <if test="jsonContent != null">#{jsonContent},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSheetInst" parameterType="SheetInst">
+        update sheet_inst
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="instId != null">inst_id = #{instId},</if>
+            <if test="topic != null">topic = #{topic},</if>
+            <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSheetInstById" parameterType="Long">
+        delete from sheet_inst where id = #{id}
+    </delete>
+
+    <delete id="deleteSheetInstByIds" parameterType="String">
+        delete from sheet_inst where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

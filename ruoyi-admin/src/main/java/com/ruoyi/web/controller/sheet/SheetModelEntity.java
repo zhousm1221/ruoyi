@@ -13,10 +13,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SheetModelEntity {
+    //模板ID
     private String sheetModelId;
+    //模板名称
     private String sheetModelName;
-    private Object sheetContent;//
+    //模板Sheet内容
+    private SheetOption sheetContent;
+    //创建人
     private String createUser;
+    //创建时间
     private String createTime;
 
 }

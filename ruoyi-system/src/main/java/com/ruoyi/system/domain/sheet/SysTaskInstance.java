@@ -1,8 +1,6 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.system.domain.sheet;
 
 import lombok.Data;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -13,12 +11,33 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2022-06-22
  */
 @Data
-public class SysTaskCenter extends BaseEntity
+public class SysTaskInstance extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 主键 */
-    private Long id;
+
+
+    /** 主题 */
+    @Excel(name = "主题")
+    private String topic;
+
+    /** 关联模板id */
+    @Excel(name = "关联模板id")
+    private String modelId;
+
+    /** 内容 */
+    @Excel(name = "内容")
+    private Object content;
+
+    /** 内容 */
+    @Excel(name = "内容")
+    private String jsonContent;
+
+    /** 创建人 */
+    @Excel(name = "创建人")
+    private String createUser;
+
+    /**********************************************************************************/
 
     /** 任务名称 */
     @Excel(name = "任务名称")
@@ -47,10 +66,5 @@ public class SysTaskCenter extends BaseEntity
     /** 完成时间 */
     @Excel(name = "完成时间")
     private String doneTime;
-
-    /** 内容 */
-    @Excel(name = "完成时间")
-    private String content;
-
 
 }
