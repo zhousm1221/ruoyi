@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysTaskCenterMapper">
+
+    <resultMap type="SysTaskCenter" id="SysTaskCenterResult">
+        <result property="id"    column="id"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="taskBind"    column="task_bind"    />
+        <result property="executor"    column="executor"    />
+        <result property="originator"    column="originator"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="doneTime"    column="done_time"    />
+    </resultMap>
+
+    <sql id="selectSysTaskCenterVo">
+        select id, task_name, task_bind, executor, originator, type, status, create_time, done_time from sys_task_center
+    </sql>
+
+    <select id="selectSysTaskCenterList" parameterType="SysTaskCenter" resultMap="SysTaskCenterResult">
+        <include refid="selectSysTaskCenterVo"/>
+        <where>
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+            <if test="executor != null  and executor != ''"> and executor = #{executor}</if>
+            <if test="originator != null  and originator != ''"> and originator = #{originator}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectSysTaskCenterById" parameterType="Long" resultMap="SysTaskCenterResult">
+        <include refid="selectSysTaskCenterVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysTaskCenter" parameterType="SysTaskCenter">
+        insert into sys_task_center
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="taskName != null">task_name,</if>
+            <if test="taskBind != null">task_bind,</if>
+            <if test="executor != null">executor,</if>
+            <if test="originator != null">originator,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="doneTime != null">done_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="taskName != null">#{taskName},</if>
+            <if test="taskBind != null">#{taskBind},</if>
+            <if test="executor != null">#{executor},</if>
+            <if test="originator != null">#{originator},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="doneTime != null">#{doneTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysTaskCenter" parameterType="SysTaskCenter">
+        update sys_task_center
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskName != null">task_name = #{taskName},</if>
+            <if test="taskBind != null">task_bind = #{taskBind},</if>
+            <if test="executor != null">executor = #{executor},</if>
+            <if test="originator != null">originator = #{originator},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="doneTime != null">done_time = #{doneTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysTaskCenterById" parameterType="Long">
+        delete from sys_task_center where id = #{id}
+    </delete>
+
+    <delete id="deleteSysTaskCenterByIds" parameterType="String">
+        delete from sys_task_center where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
