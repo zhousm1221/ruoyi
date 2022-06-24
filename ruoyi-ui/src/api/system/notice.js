@@ -9,6 +9,24 @@ export function listNotice(query) {
   })
 }
 
+//查询报表管理列表
+export function getlistNotice(query) {
+  return request({
+    url: '/system/model/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 新增excel模版
+export function addExcelData(data) {
+  return request({
+    url: '/system/model',
+    method: 'post',
+    data: data
+  })
+}
+
 // 查询公告详细
 export function getNotice(noticeId) {
   return request({
