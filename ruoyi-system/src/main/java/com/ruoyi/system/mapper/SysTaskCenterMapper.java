@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysTaskCenter;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 任务中心Mapper接口
@@ -17,7 +18,7 @@ public interface SysTaskCenterMapper
      * @param id 任务中心主键
      * @return 任务中心
      */
-    public SysTaskCenter selectSysTaskCenterById(Long id);
+    public SysTaskCenter selectSysTaskCenterById(@Param("id") Long id, @Param("type")Integer type);
 
     /**
      * 查询任务中心列表

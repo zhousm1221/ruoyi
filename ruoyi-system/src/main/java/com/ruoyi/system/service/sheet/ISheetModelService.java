@@ -20,7 +20,7 @@ public interface ISheetModelService
      * @param id 报模板主键
      * @return 报模板
      */
-    public SheetModel selectSheetModelById(Long id);
+    public SheetModel selectSheetModelById(String id);
 
     /**
      * 查询报模板列表

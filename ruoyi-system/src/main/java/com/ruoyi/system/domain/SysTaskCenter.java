@@ -49,8 +49,10 @@ public class SysTaskCenter extends BaseEntity
     private String doneTime;
 
     /** 内容 */
-    @Excel(name = "完成时间")
-    private String content;
+    private Object content;
+
+    /** 模板内容 */
+    private Object modelContent;
 
 
 }

@@ -47,6 +47,18 @@ public class SysTaskCenterController extends BaseController
     }
 
     /**
+     * 查询任务中心列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:center:list')")
+    @GetMapping("/list/{{user}}")
+    public TableDataInfo getTODOList(SysTaskCenter sysTaskCenter)
+    {
+        startPage();
+        List<SysTaskCenter> list = sysTaskCenterService.selectSysTaskCenterList(sysTaskCenter);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出任务中心列表
      */
     @PreAuthorize("@ss.hasPermi('system:center:export')")
@@ -63,10 +75,10 @@ public class SysTaskCenterController extends BaseController
      * 获取任务中心详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:center:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{id}/{type}")
+    public AjaxResult getInfo(@PathVariable("id") Long id,@PathVariable("type") Integer type)
     {
-        return AjaxResult.success(sysTaskCenterService.selectSysTaskCenterById(id));
+        return AjaxResult.success(sysTaskCenterService.selectSysTaskCenterById(id, type));
     }
 
     /**

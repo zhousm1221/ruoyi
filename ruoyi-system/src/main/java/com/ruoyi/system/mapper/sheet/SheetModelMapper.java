@@ -17,10 +17,10 @@ public interface SheetModelMapper
     /**
      * 查询报模板
      * 
-     * @param id 报模板主键
+     * @param modelId 报模板主键
      * @return 报模板
      */
-    public SheetModel selectSheetModelById(Long id);
+    public SheetModel selectSheetModelById(String modelId);
 
     /**
      * 查询报模板列表

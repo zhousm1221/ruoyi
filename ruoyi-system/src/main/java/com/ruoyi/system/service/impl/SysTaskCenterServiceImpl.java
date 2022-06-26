@@ -1,7 +1,10 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.google.gson.Gson;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.util.SheetFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysTaskCenterMapper;
@@ -24,12 +27,26 @@ public class SysTaskCenterServiceImpl implements ISysTaskCenterService
      * 查询任务中心
      * 
      * @param id 任务中心主键
+     * @param type
      * @return 任务中心
      */
     @Override
-    public SysTaskCenter selectSysTaskCenterById(Long id)
+    public SysTaskCenter selectSysTaskCenterById(Long id, Integer type)
     {
-        return sysTaskCenterMapper.selectSysTaskCenterById(id);
+        SysTaskCenter taskCenter = sysTaskCenterMapper.selectSysTaskCenterById(id,type);
+        String contentStr = (String) taskCenter.getContent();
+        Gson gson = new Gson();
+        Object o = gson.fromJson(contentStr, Object.class);
+        //待办，则直接获取模板内容返回
+        if (type == 0){
+            taskCenter.setContent(o);
+        }
+        //已办，则进行表头内容合并后返回
+        if (type == 1){
+            SheetFormat.mergeSheetContent((String)taskCenter.getModelContent(),contentStr,false);
+            taskCenter.setContent(o);
+        }
+        return taskCenter;
     }
 
     /**

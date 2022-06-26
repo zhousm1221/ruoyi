@@ -15,9 +15,10 @@ public interface ISysTaskCenterService
      * 查询任务中心
      * 
      * @param id 任务中心主键
+     * @param type
      * @return 任务中心
      */
-    public SysTaskCenter selectSysTaskCenterById(Long id);
+    public SysTaskCenter selectSysTaskCenterById(Long id, Integer type);
 
     /**
      * 查询任务中心列表

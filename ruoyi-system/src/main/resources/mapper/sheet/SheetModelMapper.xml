@@ -33,9 +33,9 @@
         </where>
     </select>
 
-    <select id="selectSheetModelById" parameterType="Long" resultMap="SheetModelResult">
+    <select id="selectSheetModelById" parameterType="String" resultMap="SheetModelResult">
         <include refid="selectSheetModelVo"/>
-        where id = #{id}
+        where model_id = #{modelId}
     </select>
 
     <insert id="insertSheetModel" parameterType="SheetModel" useGeneratedKeys="true" keyProperty="id">

@@ -6,7 +6,9 @@ import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.system.domain.sheet.SheetInst;
+import com.ruoyi.system.domain.sheet.SheetModel;
 import com.ruoyi.system.mapper.sheet.SheetInstMapper;
+import com.ruoyi.system.mapper.sheet.SheetModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class SheetInstServiceImpl implements ISheetInstService
 {
     @Autowired
     private SheetInstMapper sheetInstMapper;
+
+    @Autowired
+    private SheetModelMapper sheetModelMapper;
 
     /**
      * 查询报实例
@@ -58,7 +63,8 @@ public class SheetInstServiceImpl implements ISheetInstService
     {
         sheetInst.setCreateTime(DateUtils.getNowDate());
         sheetInst.setInstId(UUID.fastUUID().toString());
-        sheetInst.setJsonContent(JSON.toJSONString(sheetInst.getContent()));
+        SheetModel sheetModel = sheetModelMapper.selectSheetModelById(sheetInst.getModelId());
+        sheetInst.setContent(sheetModel.getContent());
         return sheetInstMapper.insertSheetInst(sheetInst);
     }
 

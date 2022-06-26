@@ -32,9 +32,9 @@ public class SheetModelServiceImpl implements ISheetModelService
      * @return 报模板
      */
     @Override
-    public SheetModel selectSheetModelById(Long id)
+    public SheetModel selectSheetModelById(String modelId)
     {
-        return sheetModelMapper.selectSheetModelById(id);
+        return sheetModelMapper.selectSheetModelById(modelId);
     }
 
     /**
@@ -48,6 +48,7 @@ public class SheetModelServiceImpl implements ISheetModelService
     {
         return sheetModelMapper.selectSheetModelList(sheetModel);
     }
+
 
     /**
      * 新增报模板

@@ -40,7 +40,7 @@
             <if test="instId != null">inst_id,</if>
             <if test="topic != null">topic,</if>
             <if test="modelId != null">model_id,</if>
-            <if test="jsonContent != null">content,</if>
+            <if test="content != null">content,</if>
             <if test="createUser != null">create_user,</if>
             <if test="createTime != null">create_time,</if>
         </trim>
@@ -48,7 +48,7 @@
             <if test="instId != null">#{instId},</if>
             <if test="topic != null">#{topic},</if>
             <if test="modelId != null">#{modelId},</if>
-            <if test="jsonContent != null">#{jsonContent},</if>
+            <if test="content != null">#{content},</if>
             <if test="createUser != null">#{createUser},</if>
             <if test="createTime != null">#{createTime},</if>
         </trim>

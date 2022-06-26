@@ -65,10 +65,13 @@ public class SheetModelController extends BaseController
      * 获取报模板详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:model:query')")
-    @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    @GetMapping(value = "/{modelId}")
+    public AjaxResult getInfo(@PathVariable("modelId") String modelId)
     {
-        return AjaxResult.success(sheetModelService.selectSheetModelById(id));
+
+//        System.out.println(id);
+//        String modelId = "bccfccdd-ac01-47bb-9381-1798fab72ad2";
+        return AjaxResult.success(sheetModelService.selectSheetModelById(modelId));
     }
 
     /**
