@@ -36,14 +36,13 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
+          v-hasPermi="['system:notice:add']"
           type="primary"
           plain
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:notice:add']"
-          >新增</el-button
-        >
+        >新增</el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button
@@ -67,10 +66,7 @@
           v-hasPermi="['system:notice:remove']"
         >删除</el-button>
       </el-col> -->
-      <right-toolbar
-        :showSearch.sync="showSearch"
-        @queryTable="getList"
-      ></right-toolbar>
+      <right-toolbar :show-search.sync="showSearch" @queryTable="getList" />
     </el-row>
 
     <el-table
@@ -85,13 +81,25 @@
         align="center"
         prop="modelId"
         :show-overflow-tooltip="true"
-      />
+      >
+        <template slot-scope="scope">
+          <div class="blue-font-color" @click="handleModel(scope.row)">
+            {{ scope.row.modelId }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="模版名称"
         align="center"
         prop="modelName"
         width="100"
-      />
+      >
+        <template slot-scope="scope">
+          <div class="blue-font-color" @click="handleModel(scope.row)">
+            {{ scope.row.modelName }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="创建人"
         align="center"
@@ -113,21 +121,19 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-hasPermi="['system:notice:edit']"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:notice:edit']"
-            >修改</el-button
-          >
+          >修改</el-button>
           <el-button
+            v-hasPermi="['system:notice:remove']"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:notice:remove']"
-            >删除</el-button
-          >
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +166,7 @@
                   :key="dict.value"
                   :label="dict.label"
                   :value="dict.value"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -171,8 +177,7 @@
                   v-for="dict in dict.type.sys_notice_status"
                   :key="dict.value"
                   :label="dict.value"
-                  >{{ dict.label }}</el-radio
-                >
+                >{{ dict.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -195,15 +200,16 @@
 import {
   getlistNotice,
   addExcelData,
+  modeDetails,
   getNotice,
   delNotice,
   addNotice,
-  updateNotice,
-} from "@/api/system/notice";
+  updateNotice
+} from '@/api/system/notice'
 
 export default {
-  name: "Notice",
-  dicts: ["sys_notice_status", "sys_notice_type"],
+  name: 'Notice',
+  dicts: ['sys_notice_status', 'sys_notice_type'],
   data() {
     return {
       // 遮罩层
@@ -221,83 +227,92 @@ export default {
       // 公告表格数据
       noticeList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        deptId: 200,
+        deptId: 200
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         noticeTitle: [
-          { required: true, message: "公告标题不能为空", trigger: "blur" },
+          { required: true, message: '公告标题不能为空', trigger: 'blur' }
         ],
         noticeType: [
-          { required: true, message: "公告类型不能为空", trigger: "change" },
-        ],
+          { required: true, message: '公告类型不能为空', trigger: 'change' }
+        ]
       },
-      data: {
-        modelName: "测试模板001",
-        content: {
-          name: "Cell",
-          index: "sheet_01",
-          order: 0,
-          status: 1,
-          celldata: [
-            {
-              r: 0,
-              c: 0,
-              v: {
-                ct: {
-                  fa: "@",
-                  t: "s",
-                },
-                fs: 12,
-                fc: "#000000",
-                ff: "宋体",
-                ht: 0,
-                vt: 0,
-                tb: 1,
-                v: "乘风破浪名单",
-                qp: 1,
-                m: "乘风破浪名单",
-                mc: {
-                  r: 0,
-                  c: 0,
-                  rs: 1,
-                  cs: 4,
-                },
-              },
-            },
-          ],
-        },
-        createUser: 100,
-        status: 1,
-      },
-    };
+      contentData: ''
+      // data: {
+      //   modelName: '测试模板001',
+      //   content: {
+      //     name: 'Cell',
+      //     index: 'sheet_01',
+      //     order: 0,
+      //     status: 1,
+      //     celldata: [
+      //       {
+      //         r: 0,
+      //         c: 0,
+      //         v: {
+      //           ct: {
+      //             fa: '@',
+      //             t: 's'
+      //           },
+      //           fs: 12,
+      //           fc: '#000000',
+      //           ff: '宋体',
+      //           ht: 0,
+      //           vt: 0,
+      //           tb: 1,
+      //           v: '乘风破浪名单',
+      //           qp: 1,
+      //           m: '乘风破浪名单',
+      //           mc: {
+      //             r: 0,
+      //             c: 0,
+      //             rs: 1,
+      //             cs: 4
+      //           }
+      //         }
+      //       }
+      //     ]
+      //   },
+      //   createUser: 100,
+      //   status: 1
+      // }
+    }
   },
   created() {
-    this.getList();
+    this.getList()
   },
   methods: {
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       getlistNotice(this.queryParams).then((response) => {
-        this.noticeList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        console.log(response, '111')
+        this.noticeList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
+    },
+    // 点击模版ID跳转模版填报页
+    handleModel(row) {
+      modeDetails(row.modelId).then((response) => {
+        this.contentData = response.data
+        this.$router.push({ path: '/sheet/filling', query: { addData: this.contentData }})
+      })
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -306,82 +321,74 @@ export default {
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
-        status: "0",
-      };
-      this.resetForm("form");
+        status: '0'
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.noticeId);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
+      this.ids = selection.map((item) => item.noticeId)
+      this.single = selection.length != 1
+      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
-      addExcelData(this.data).then((response) => {
-        if (response.msg === "操作成功") {
-          this.$message({
-            message: "新增成功",
-            type: "success",
-          });
-        }
-        console.log(response, "000");
-      });
+      this.$router.push({ path: '/sheet/filling', query: { add: 1 }})
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const noticeId = row.noticeId || this.ids;
+      this.reset()
+      const noticeId = row.noticeId || this.ids
       getNotice(noticeId).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改公告";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = '修改公告'
+      })
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
+    submitForm: function() {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.noticeId != undefined) {
             updateNotice(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           } else {
             addNotice(this.form).then((response) => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const noticeIds = row.noticeId || this.ids;
+      const noticeIds = row.noticeId || this.ids
       this.$modal
         .confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项？')
-        .then(function () {
-          return delNotice(noticeIds);
+        .then(function() {
+          return delNotice(noticeIds)
         })
         .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
+          this.getList()
+          this.$modal.msgSuccess('删除成功')
         })
-        .catch(() => {});
-    },
-  },
-};
+        .catch(() => {})
+    }
+  }
+}
 </script>

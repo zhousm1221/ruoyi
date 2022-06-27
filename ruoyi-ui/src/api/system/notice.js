@@ -9,7 +9,7 @@ export function listNotice(query) {
   })
 }
 
-//查询报表管理列表
+// 查询报表管理列表
 export function getlistNotice(query) {
   return request({
     url: '/system/model/list',
@@ -24,6 +24,84 @@ export function addExcelData(data) {
     url: '/system/model',
     method: 'post',
     data: data
+  })
+}
+
+// 查询报表模版
+export function aboutList(query) {
+  return request({
+    url: '/system/model/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查看模版详情
+export function modeDetails(modelId) {
+  return request({
+    url: 'system/model/' + modelId,
+    method: 'get'
+  })
+}
+
+// 人员下发列表
+export function issuedList(query) {
+  return request({
+    url: '/system/user/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 确定下发按钮
+export function confirmToIssue(data) {
+  return request({
+    url: '/system/inst/issued',
+    method: 'post',
+    data: data
+  })
+}
+
+// 下发作业列表
+export function instList(query) {
+  return request({
+    url: '/system/inst/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查看待办列表
+export function dealtWithList(query) {
+  return request({
+    url: '/system/center/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查看已办列表
+export function doneList(query) {
+  return request({
+    url: '/system/center/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查看已办任务详情
+export function taskDetails(id) {
+  return request({
+    url: '/system/center/' + id + '/1',
+    method: 'get'
+  })
+}
+
+// 查看待办任务详情
+export function toDODetails(id) {
+  return request({
+    url: '/system/center/' + id + '/0',
+    method: 'get'
   })
 }
 

@@ -1,19 +1,5 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          v-hasPermi="['system:notice:add']"
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-        >新增</el-button>
-      </el-col>
-      <right-toolbar :show-search.sync="showSearch" @queryTable="getInstList" />
-    </el-row>
-
     <el-table
       v-loading="loading"
       :data="noticeList"
@@ -27,23 +13,42 @@
         width="100"
       />
       <el-table-column
-        label="作业id"
+        label="任务名称"
         align="center"
-        prop="instId"
+        prop="taskName"
         :show-overflow-tooltip="true"
-      />
+      >
+        <template slot-scope="scope">
+          <div class="blue-font-color" @click="handleModel(scope.row)">
+            {{ scope.row.taskName }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
-        label="主题"
+        label="执行人"
         align="center"
-        prop="topic"
+        prop="executor"
         width="100"
       />
       <el-table-column
-        label="创建人"
+        label="发起人"
         align="center"
-        prop="createUser"
+        prop="originator"
         width="100"
       />
+      <el-table-column label="任务状态" align="center" prop="status" width="100">
+        <template slot-scope="scope">
+          <dict-tag
+            :options="dict.type.sys_notice_status"
+            :value="scope.row.status"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="完成时间" align="center" prop="createTime" width="100">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.doneTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="操作"
         align="center"
@@ -116,10 +121,13 @@
 
 <script>
 import {
+  dealtWithList,
+  taskDetails,
   getNotice,
   delNotice,
   aboutList,
   issuedList,
+  doneList,
   instList,
   confirmToIssue
 } from '@/api/system/notice'
@@ -150,7 +158,9 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        executor: 100,
+        status: 1
       },
       issuedParams: {
         pageNum: 1,
@@ -179,18 +189,19 @@ export default {
     this.getIssued()
   },
   methods: {
-    /** 下发作业列表 */
+    /** 查询公告列表 */
     getInstList() {
       this.loading = true
-      const params = {
-        pageNum: 1,
-        pageSize: 10,
-        createUser: localStorage.getItem('userName')
-      }
-      instList(params).then((response) => {
+      doneList(this.queryParams).then((response) => {
         this.noticeList = response.rows
         this.total = response.total
         this.loading = false
+      })
+    },
+    // 查看任务详情
+    handleModel(row) {
+      taskDetails(row.id).then((response) => {
+        console.log(response, '333')
       })
     },
     // 报表模版查询
