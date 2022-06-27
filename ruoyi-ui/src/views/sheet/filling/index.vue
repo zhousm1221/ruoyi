@@ -18,6 +18,7 @@
         padding: 0px;
         position: absolute;
         width: 100%;
+        height: 550px;
         left: 0px;
         top: 30px;
         bottom: 0px;
@@ -108,7 +109,7 @@ export default {
               authority: {} // 工作表保护
             },
             scrollLeft: 0, // 左右滚动条位置
-            scrollTop: 315, // 上下滚动条位置
+            scrollTop: 0, // 上下滚动条位置
             luckysheet_select_save: [], // 选中的区域
             calcChain: [], // 公式链
             isPivotTable: false, // 是否数据透视表

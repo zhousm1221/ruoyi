@@ -36,6 +36,14 @@ export function aboutList(query) {
   })
 }
 
+// 查看作业完成情况
+export function instTask(instID) {
+  return request({
+    url: '/system/inst/task/' + instID,
+    method: 'get'
+  })
+}
+
 // 查看模版详情
 export function modeDetails(modelId) {
   return request({

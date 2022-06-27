@@ -31,7 +31,13 @@
         align="center"
         prop="instId"
         :show-overflow-tooltip="true"
-      />
+      >
+        <template slot-scope="scope">
+          <div class="blue-font-color" @click="handleModel(scope.row)">
+            {{ scope.row.instId }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         label="主题"
         align="center"
@@ -56,7 +62,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-          >修改</el-button>
+          >预览</el-button>
           <el-button
             v-hasPermi="['system:notice:remove']"
             size="mini"
@@ -111,12 +117,73 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <!-- 作业ID弹框 -->
+    <el-dialog :title="title" :visible.sync="openID" width="780px" append-to-body>
+      <div class="open">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      </div>
+      <el-table
+        v-loading="loading"
+        :data="noticeList"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          label="序号"
+          align="center"
+          type="index"
+          width="200"
+        />
+        <el-table-column
+          label="填报人"
+          align="center"
+          prop="executor"
+          width="250"
+        />
+        <el-table-column
+          label="填报情况"
+          align="center"
+          prop="status"
+          width="250"
+        />
+        <!-- <el-form ref="form" :model="taskData" label-width="80px">
+        <el-row>
+          <el-col :span="18">
+            <el-form-item label="报表模版" prop="noticeType">
+              <el-select v-model="form.template" placeholder="请选择报表模版">
+                <el-option
+                  v-for="item in templateList"
+                  :key="item.id"
+                  :label="item.modelName"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="18">
+            <el-form-item label="下发人员" prop="noticeType">
+              <el-select v-model="form.issuedBy" placeholder="请选择下发人员">
+                <el-option
+                  v-for="item in issuedByList"
+                  :key="item.userId"
+                  :label="item.nickName"
+                  :value="item.userId"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form> -->
+      </el-table></el-dialog>
   </div>
 </template>
 
 <script>
 import {
   getNotice,
+  instTask,
   delNotice,
   aboutList,
   issuedList,
@@ -147,6 +214,7 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      openID: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -159,6 +227,7 @@ export default {
       },
       // 表单参数
       form: {},
+      taskData: {},
 
       // 表单校验
       rules: {
@@ -206,6 +275,11 @@ export default {
         console.log(response, 'response')
       })
     },
+
+    // 点击作业ID弹框
+    handleModel() {
+      this.$router.push({ path: '/sheet/filling', query: { task: 1 }})
+    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -234,15 +308,13 @@ export default {
       this.open = true
       this.title = '作业下发'
     },
-    /** 修改按钮操作 */
+    /** 预览按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      const noticeId = row.noticeId || this.ids
-      getNotice(noticeId).then((response) => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改公告'
+      instTask(row.instId).then((response) => {
+        console.log(response, '2345')
       })
+      this.openID = true
+      this.reset()
     },
     /** 提交按钮 */
     submitForm: function() {
@@ -281,3 +353,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.open {
+  display: flex;
+}
+</style>
