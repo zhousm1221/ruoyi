@@ -158,7 +158,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        executor: 100,
+        executor: localStorage.getItem('userName'),
         status: 0
       },
       issuedParams: {
