@@ -200,8 +200,8 @@ export default {
 
     // 查看任务详情
     handleModel(row) {
-      // const paramsTask = row.id + 'type =1'
       toDODetails(row.id).then((response) => {
+        this.$router.push({ path: '/sheet/filling', query: { dealttask: response.data }})
         console.log(response, '333')
       })
     },

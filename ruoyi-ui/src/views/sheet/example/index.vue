@@ -84,30 +84,39 @@
 
     <!-- 添加或修改公告对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" label-width="80px">
         <el-row>
+          <div class="form">
+            <div style="width: 100px; color: #606266;font-size: 14px;font-weight: bold;text-align:right; display: flex;justify-content: space-around"> 主                                           题</div>
+            <el-input v-model="form.topic" placeholder="" />
+          </div>
           <el-col :span="18">
             <el-form-item label="报表模版" prop="noticeType">
               <el-select v-model="form.template" placeholder="请选择报表模版">
                 <el-option
                   v-for="item in templateList"
-                  :key="item.id"
+                  :key="item.modelId"
                   :label="item.modelName"
-                  :value="item.id"
+                  :value="item.modelId"
                 />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="18">
             <el-form-item label="下发人员" prop="noticeType">
-              <el-select v-model="form.issuedBy" placeholder="请选择下发人员">
+              <!-- <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选</el-checkbox> -->
+              <div style="margin: 15px 0;" />
+              <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                <el-checkbox v-for="item in issuedByList" :key="item.value" :label="item.value">{{ item.label }}</el-checkbox>
+              </el-checkbox-group>
+              <!-- <el-select v-model="form.issuedBy" placeholder="请选择下发人员">
                 <el-option
                   v-for="item in issuedByList"
                   :key="item.userId"
                   :label="item.nickName"
                   :value="item.userId"
                 />
-              </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
         </el-row>
@@ -120,13 +129,13 @@
     <!-- 作业ID弹框 -->
     <el-dialog :title="title" :visible.sync="openID" width="780px" append-to-body>
       <div class="open">
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
+        <div>{{ taskInfo.topic }}</div>
+        <div>{{ taskInfo.createUser }}</div>
+        <div>{{ parseTime(taskInfo.createTime, '{y}-{m}-{d}') }}</div>
       </div>
       <el-table
         v-loading="loading"
-        :data="noticeList"
+        :data="taskList"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -183,6 +192,7 @@
 <script>
 import {
   getNotice,
+  instJob,
   instTask,
   delNotice,
   aboutList,
@@ -228,7 +238,8 @@ export default {
       // 表单参数
       form: {},
       taskData: {},
-
+      taskList: [],
+      taskInfo: {},
       // 表单校验
       rules: {
         noticeTitle: [
@@ -238,7 +249,11 @@ export default {
           { required: true, message: '公告类型不能为空', trigger: 'change' }
         ]
       },
+      isIndeterminate: true,
+      checkAll: false,
       templateList: '', // 模版列表
+      checkedCities: [], //
+      checkList: '',
       issuedByList: '' // 人员下发列表
     }
   },
@@ -266,19 +281,56 @@ export default {
     getTemplate() {
       aboutList(this.queryParams).then((response) => {
         this.templateList = response.rows
+        console.log(this.templateLis, '11222')
       })
     },
     // 查询下发人员列表
     getIssued() {
       issuedList(this.issuedParams).then((response) => {
-        this.issuedByList = response.rows
-        console.log(response, 'response')
+        this.issuedByList = response.rows.map(item => {
+          return {
+            value: item.userId,
+            label: item.nickName
+          }
+        })
+        // this.issuedByList = response.rows
+        // console.log(this.issuedByList, 'this.issuedByList')
+        // const ab = this.issuedByList
+        // ab.map(item => {
+        //   return {
+        //     value: item.userId,
+        //     label: item.nickName
+        //   }
+        // })
+        console.log(this.issuedByList, '1111')
       })
     },
 
     // 点击作业ID弹框
-    handleModel() {
-      this.$router.push({ path: '/sheet/filling', query: { task: 1 }})
+    handleModel(row) {
+      instJob(row.instId).then((response) => {
+        this.$router.push({ path: '/sheet/filling', query: { task: response.data }})
+      })
+    },
+    // 全选
+    // handleCheckAllChange(val) {
+    //   console.log(val, '1111')
+
+    //   if (val === true) {
+    //     this.checkedCities.push(this.issuedByList.map(item => {
+    //       return item.label
+    //     }))
+    //     console.log(this.checkedCities, '111')
+    //   }
+    //   // this.checkedCities = val ? this.issuedByList : []
+    //   this.isIndeterminate = false
+    // },
+    //
+    handleCheckedCitiesChange(value) {
+      this.checkList = value
+      const checkedCount = value.length
+      this.checkAll = checkedCount === this.issuedByList.length
+      this.isIndeterminate = checkedCount > 0 && checkedCount < this.issuedByList.length
     },
     // 取消按钮
     cancel() {
@@ -292,8 +344,12 @@ export default {
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
+        topic: undefined,
+        template: undefined,
         status: '0'
       }
+      this.checkList = ''
+      this.checkedCities = []
       this.resetForm('form')
     },
     // 多选框选中数据
@@ -311,6 +367,8 @@ export default {
     /** 预览按钮操作 */
     handleUpdate(row) {
       instTask(row.instId).then((response) => {
+        this.taskInfo = response.data
+        this.taskList = response.data.taskInfo
         console.log(response, '2345')
       })
       this.openID = true
@@ -319,10 +377,10 @@ export default {
     /** 提交按钮 */
     submitForm: function() {
       const confirmParams = {
-        topic: 'topic',
+        topic: this.form.topic,
         modelId: this.form.template,
-        createUser: this.form.issuedBy,
-        executor: '200,201,202',
+        createUser: localStorage.getItem('userName'),
+        executor: this.checkList.toString(),
         type: 'type',
         status: '0'
       }
@@ -332,6 +390,7 @@ export default {
             message: '新增成功',
             type: 'success'
           })
+          this.open = false
         }
         console.log(response, '9999')
       })
@@ -354,7 +413,16 @@ export default {
 }
 </script>
 <style scoped>
+.form {
+  display: flex;
+  margin-bottom: 20px;
+  color: #606266;
+}
 .open {
   display: flex;
+  justify-content: space-between;
+}
+/deep/.el-input--medium .el-input__inner {
+  width: 200px;
 }
 </style>

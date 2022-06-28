@@ -44,6 +44,23 @@ export function instTask(instID) {
   })
 }
 
+// 查看作业下发详情
+export function instJob(jobID) {
+  return request({
+    url: '/system/inst/job/' + jobID,
+    method: 'get'
+  })
+}
+
+// 提交待办任务
+export function dealtTask(data) {
+  return request({
+    url: '/system/center',
+    method: 'put',
+    data: data
+  })
+}
+
 // 查看模版详情
 export function modeDetails(modelId) {
   return request({

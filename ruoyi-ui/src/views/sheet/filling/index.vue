@@ -51,7 +51,7 @@
 import LuckyExcel from 'luckyexcel'
 // 导入库export.js 这个文件是es6的，不能在普通的HTML文件直接引入js文件（虽然都是js文件，但是有区别，具体请百度es6与es5）！需要把es6转es5才可以直接引入使用！
 import { exportExcel } from '@/utils/export'
-import { addExcelData } from '@/api/system/notice'
+import { addExcelData, dealtTask } from '@/api/system/notice'
 
 export default {
   name: 'HelloWorld',
@@ -63,7 +63,9 @@ export default {
       selected: '',
       isMaskShow: false,
       celldata: '',
-      excelList: ''
+      excelList: '',
+      flag: '',
+      taskID: ''
     }
   },
   created() {
@@ -73,10 +75,15 @@ export default {
     } else if (this.$route.query.addData) {
       this.excelList = this.$route.query.addData.content.celldata
       console.log(this.$route.query.addData, '0000')
+    } else if (this.$route.query.task) {
+      this.excelList = this.$route.query.task.content.celldata
+    } else if (this.$route.query.dealttask) {
+      this.excelList = this.$route.query.dealttask.content.celldata
+      this.flag = 'task'
+      this.taskID = this.$route.query.dealttask.id
     }
   },
   mounted() {
-    // In some cases, you need to use $nextTick
     this.init()
   },
   methods: {
@@ -88,8 +95,8 @@ export default {
         gridKey: 'excel001',
         data: [
           {
-            // name: "Cell", //工作表名称
-            // color: "", //工作表颜色
+            name: 'Cell', // 工作表名称
+            color: '', // 工作表颜色
             index: 0, // 工作表索引
             status: 1, // 激活状态
             order: 0, // 工作表的下标
@@ -232,34 +239,52 @@ export default {
     },
     async save() {
       this.celldata = window.luckysheet.transToCellData(
-        window.luckysheet.getLuckysheetfile(2)[0].data
+        window.luckysheet.getLuckysheetfile()[0].data
       )
-      const params = {
-        modelName: '测试模板001',
-        content: {
-          name: 'Cell',
-          index: 'sheet_01',
-          order: 0,
-          status: 1,
-          celldata: this.celldata
-        },
-        createUser: 100,
-        status: 1
-      }
-      addExcelData(params).then((response) => {
-        if (response.msg === '操作成功') {
-          this.$message({
-            message: '保存成功',
-            type: 'success'
-          })
-          setTimeout(() => {
-            this.$router.push({ path: '/sheet/template' })
-          }, 2000)
+      console.log(this.celldata, '11111')
+      if (this.flag === 'task') {
+        const paramsTask = {
+          id: this.taskID,
+          content: {
+            celldata: this.celldata
+          }
         }
-        console.log(response, '000')
-      })
-      // this.dataUp()
-      console.log(this.celldata, 'this.celldata')
+        dealtTask(paramsTask).then((response) => {
+          if (response.msg === '操作成功') {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.$router.push({ path: '/sheet/task' })
+            }, 2000)
+          }
+        })
+      } else {
+        const params = {
+          modelName: luckysheet.toJson().title,
+          content: {
+            name: 'Cell',
+            index: 'sheet_01',
+            order: 0,
+            status: 1,
+            celldata: this.celldata
+          },
+          createUser: localStorage.getItem('userName'),
+          status: 1
+        }
+        addExcelData(params).then((response) => {
+          if (response.msg === '操作成功') {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.$router.push({ path: '/sheet/template' })
+            }, 2000)
+          }
+        })
+      }
     }
     // dataUp() {
     //   window.luckysheet.setDataVerification(
@@ -301,7 +326,7 @@ a {
 }
 .box-top {
   position: absolute;
-  top: 10px;
+  /* top: 10px; */
 }
 .box-down {
 }
@@ -312,6 +337,6 @@ a {
   margin-left: 80px;
 }
 /deep/ .luckysheet {
-  margin-top: 20px;
+  /* padding-top: 10px; */
 }
 </style>
