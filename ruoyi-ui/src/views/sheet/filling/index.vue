@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
     <div style="" class="box-top">
-      <input style="font-size: 16px" type="file" @change="uploadExcel">
+      <img alt="logo" src="@/assets/logo/yidong.png" class="logo">
+      <input style="font-size: 16px" type="file" class="down-load" @change="uploadExcel">
       <el-button
         type="small"
         class="box-down"
@@ -13,16 +14,7 @@
 
     <div
       id="luckysheet"
-      style="
-        margin: 0px;
-        padding: 0px;
-        position: absolute;
-        width: 100%;
-        height: 550px;
-        left: 0px;
-        top: 30px;
-        bottom: 0px;
-      "
+      style=""
     />
 
     <div
@@ -324,11 +316,27 @@ li {
 a {
   color: #42b983;
 }
+.hello {
+  position: relative;
+}
+#luckysheet {
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  width: 100%;
+  height: 550px;
+  left: 0px;
+  /* top: 30px; */
+  bottom: 0px;
+}
 .box-top {
   position: absolute;
-  /* top: 10px; */
+  z-index: 1;
+  top: 10px;
+  right: 0
 }
 .box-down {
+  margin-right: -50px;
 }
 .saveSheet {
   right: 0;
@@ -338,5 +346,20 @@ a {
 }
 /deep/ .luckysheet {
   /* padding-top: 10px; */
+}
+/deep/ .luckysheet_info_detail_update  {
+  display: none;
+}
+/deep/ .luckysheet_info_detail_save {
+  display: none;
+}
+/deep/.luckysheet-share-logo {
+  display: none;
+}
+.logo {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: -810px;
 }
 </style>
