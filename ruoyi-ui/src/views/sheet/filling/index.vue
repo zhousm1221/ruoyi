@@ -57,20 +57,25 @@ export default {
       celldata: '',
       excelList: '',
       flag: '',
-      taskID: ''
+      taskID: '',
+      title: ''
     }
   },
   created() {
     if (this.$route.query.add) {
-      this.getExcelData()
-      this.init()
+      this.flag = 'add'
     } else if (this.$route.query.addData) {
       this.excelList = this.$route.query.addData.content.celldata
-      console.log(this.$route.query.addData, '0000')
+      this.title = this.$route.query.addData.modelName
+      // console.log(this.$route.query.addData, '0000')
     } else if (this.$route.query.task) {
       this.excelList = this.$route.query.task.content.celldata
+      this.title = this.$route.query.task.modelName
+      // console.log(this.$route.query.task, '0000')
     } else if (this.$route.query.dealttask) {
       this.excelList = this.$route.query.dealttask.content.celldata
+      this.title = this.$route.query.dealttask.modelName
+      // console.log(this.$route.query.dealttask, '0000')
       this.flag = 'task'
       this.taskID = this.$route.query.dealttask.id
     }
@@ -84,6 +89,7 @@ export default {
       const options = {
         container: 'luckysheet',
         lang: 'zh',
+        title: this.title,
         gridKey: 'excel001',
         data: [
           {
@@ -126,7 +132,9 @@ export default {
             dataVerification: {}, // 数据验证配置
             celldata: this.excelList
           }
+
         ],
+        showsheetbarConfig: { add: false }, // 新增sheet
         hook: {
           workbookCreateAfter: function() {
             // luckysheet.hideRow(1, 3);
@@ -141,7 +149,6 @@ export default {
       luckysheet.create(options)
     },
     // 获取页面数据
-    getExcelData() {},
     uploadExcel(evt) {
       const files = evt.target.files
       if (files == null || files.length == 0) {
@@ -233,7 +240,6 @@ export default {
       this.celldata = window.luckysheet.transToCellData(
         window.luckysheet.getLuckysheetfile()[0].data
       )
-      console.log(this.celldata, '11111')
       if (this.flag === 'task') {
         const paramsTask = {
           id: this.taskID,
@@ -249,6 +255,31 @@ export default {
             })
             setTimeout(() => {
               this.$router.push({ path: '/sheet/task' })
+            }, 2000)
+          }
+        })
+      } else if (this.flag === 'add') {
+        const params = {
+          modelName: luckysheet.toJson().title,
+          content: {
+            name: 'Cell',
+            index: 'sheet_01',
+            order: 0,
+            status: 1,
+            celldata: this.celldata,
+            addData: luckysheet.toJson()
+          },
+          createUser: localStorage.getItem('userName'),
+          status: 1
+        }
+        addExcelData(params).then((response) => {
+          if (response.msg === '操作成功') {
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            setTimeout(() => {
+              this.$router.push({ path: '/sheet/template' })
             }, 2000)
           }
         })
