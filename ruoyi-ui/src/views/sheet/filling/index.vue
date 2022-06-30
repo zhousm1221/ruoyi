@@ -126,15 +126,16 @@ export default {
       this.flag = 'add'
     } else if (this.$route.query.addData) {
       this.optionsData = this.$route.query.addData.content.addData
-      console.log(this.optionsData, 'this.optionsData')
       this.excelList = this.$route.query.addData.content.celldata
       this.title = this.$route.query.addData.modelName
       // console.log(this.$route.query.addData, '0000')
     } else if (this.$route.query.task) {
+      this.optionsData = this.$route.query.task.content.addData
       this.excelList = this.$route.query.task.content.celldata
       this.title = this.$route.query.task.modelName
       // console.log(this.$route.query.task, '0000')
     } else if (this.$route.query.dealttask) {
+      this.optionsData = this.$route.query.dealttask.content.addData
       this.excelList = this.$route.query.dealttask.content.celldata
       this.title = this.$route.query.dealttask.modelName
       // console.log(this.$route.query.dealttask, '0000')
