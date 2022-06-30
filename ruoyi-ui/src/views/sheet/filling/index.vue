@@ -58,35 +58,7 @@ export default {
       excelList: '',
       flag: '',
       taskID: '',
-      title: ''
-    }
-  },
-  created() {
-    if (this.$route.query.add) {
-      this.flag = 'add'
-    } else if (this.$route.query.addData) {
-      this.excelList = this.$route.query.addData.content.celldata
-      this.title = this.$route.query.addData.modelName
-      // console.log(this.$route.query.addData, '0000')
-    } else if (this.$route.query.task) {
-      this.excelList = this.$route.query.task.content.celldata
-      this.title = this.$route.query.task.modelName
-      // console.log(this.$route.query.task, '0000')
-    } else if (this.$route.query.dealttask) {
-      this.excelList = this.$route.query.dealttask.content.celldata
-      this.title = this.$route.query.dealttask.modelName
-      // console.log(this.$route.query.dealttask, '0000')
-      this.flag = 'task'
-      this.taskID = this.$route.query.dealttask.id
-    }
-  },
-  mounted() {
-    this.init()
-  },
-  methods: {
-    // 初始化图标
-    init() {
-      const options = {
+      optionsData: {
         container: 'luckysheet',
         lang: 'zh',
         title: this.title,
@@ -145,7 +117,38 @@ export default {
             // hideColumn: false, // 隐藏选中列和显示选中列
           }
         }
-      }
+      },
+      title: ''
+    }
+  },
+  created() {
+    if (this.$route.query.add) {
+      this.flag = 'add'
+    } else if (this.$route.query.addData) {
+      this.optionsData = this.$route.query.addData.content.addData
+      console.log(this.optionsData, 'this.optionsData')
+      this.excelList = this.$route.query.addData.content.celldata
+      this.title = this.$route.query.addData.modelName
+      // console.log(this.$route.query.addData, '0000')
+    } else if (this.$route.query.task) {
+      this.excelList = this.$route.query.task.content.celldata
+      this.title = this.$route.query.task.modelName
+      // console.log(this.$route.query.task, '0000')
+    } else if (this.$route.query.dealttask) {
+      this.excelList = this.$route.query.dealttask.content.celldata
+      this.title = this.$route.query.dealttask.modelName
+      // console.log(this.$route.query.dealttask, '0000')
+      this.flag = 'task'
+      this.taskID = this.$route.query.dealttask.id
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    // 初始化图标
+    init() {
+      const options = this.optionsData
       luckysheet.create(options)
     },
     // 获取页面数据
