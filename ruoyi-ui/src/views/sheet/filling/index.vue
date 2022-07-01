@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
+    <img alt="logo" src="@/assets/logo/yidong.png" class="logo">
     <div style="" class="box-top">
-      <img alt="logo" src="@/assets/logo/yidong.png" class="logo">
-      <input style="font-size: 16px" type="file" class="down-load" @change="uploadExcel">
+      <input style="" type="file" class="down-load" @change="uploadExcel">
       <el-button
         type="small"
         class="box-down"
@@ -83,7 +83,38 @@ export default {
               rowhidden: {}, // 隐藏行
               colhidden: {}, // 隐藏列
               borderInfo: {}, // 边框
-              authority: {} // 工作表保护
+              authority: {}
+              // 'authority': { // 当前工作表的权限配置
+              //   selectLockedCells: 1, // 选定锁定单元格
+              //   selectunLockedCells: 1, // 选定解除锁定的单元格
+              //   formatCells: 1, // 设置单元格格式
+              //   formatColumns: 1, // 设置列格式
+              //   formatRows: 1, // 设置行格式
+              //   insertColumns: 1, // 插入列
+              //   insertRows: 1, // 插入行
+              //   insertHyperlinks: 1, // 插入超链接
+              //   deleteColumns: 1, // 删除列
+              //   deleteRows: 1, // 删除行
+              //   sort: 1, // 排序
+              //   filter: 1, // 使用自动筛选
+              //   usePivotTablereports: 1, // 使用数据透视表和报表
+              //   editObjects: 1, // 编辑对象
+              //   editScenarios: 1, // 编辑方案
+              //   sheet: 1, // 如果为1或true，则该工作表受到保护；如果为0或false，则该工作表不受保护。
+              //   hintText: '', // 弹窗提示的文字
+              //   algorithmName: 'None', // 加密方案：MD2,MD4,MD5,RIPEMD-128,RIPEMD-160,SHA-1,SHA-256,SHA-384,SHA-512,WHIRLPOOL
+              //   saltValue: null, // 密码解密的盐参数，为一个自己定的随机数值
+
+              //   allowRangeList: [{ // 区域保护
+              //     name: 'area', // 名称
+              //     password: '1', // 密码
+              //     hintText: '', // 提示文字
+              //     algorithmName: 'None', // 加密方案：MD2,MD4,MD5,RIPEMD-128,RIPEMD-160,SHA-1,SHA-256,SHA-384,SHA-512,WHIRLPOOL
+              //     saltValue: null, // 密码解密的盐参数，为一个自己定的随机数值
+              //     sqref: '$C$1:$D$5' // 区域范围
+              //   }]
+              // }
+
             },
             scrollLeft: 0, // 左右滚动条位置
             scrollTop: 0, // 上下滚动条位置
@@ -241,6 +272,7 @@ export default {
       // testaaa();
     },
     async save() {
+      console.log(luckysheet.getLuckysheetfile()[0].config.authority, '保存保存')
       this.celldata = window.luckysheet.transToCellData(
         window.luckysheet.getLuckysheetfile()[0].data
       )
@@ -271,7 +303,8 @@ export default {
             order: 0,
             status: 1,
             celldata: this.celldata,
-            addData: luckysheet.toJson()
+            addData: luckysheet.toJson(),
+            authority: luckysheet.getLuckysheetfile()[0].config.authority
           },
           createUser: localStorage.getItem('userName'),
           status: 1
@@ -359,7 +392,7 @@ a {
   padding: 0px;
   position: relative;
   width: 100%;
-  height: 550px;
+  height: 600px;
   left: 0px;
   /* top: 30px; */
   bottom: 0px;
@@ -368,16 +401,19 @@ a {
   position: absolute;
   z-index: 1;
   top: 10px;
-  right: 0
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .box-down {
-  margin-right: -50px;
+  /* margin-right: -50px; */
 }
 .saveSheet {
   right: 0;
 }
 .saveSheet {
-  margin-left: 80px;
+  /* margin-left: 80px; */
 }
 /deep/ .luckysheet {
   /* padding-top: 10px; */
@@ -395,6 +431,12 @@ a {
   width: 40px;
   height: 40px;
   position: absolute;
-  left: -810px;
+  left: 40px;
+  top: 10px;
+  z-index: 1
+  /* left: -810px; */
+}
+/deep/.fa-angle-left:before {
+  display: none;
 }
 </style>
