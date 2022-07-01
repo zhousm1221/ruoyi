@@ -84,37 +84,6 @@ export default {
               colhidden: {}, // 隐藏列
               borderInfo: {}, // 边框
               authority: {}
-              // 'authority': { // 当前工作表的权限配置
-              //   selectLockedCells: 1, // 选定锁定单元格
-              //   selectunLockedCells: 1, // 选定解除锁定的单元格
-              //   formatCells: 1, // 设置单元格格式
-              //   formatColumns: 1, // 设置列格式
-              //   formatRows: 1, // 设置行格式
-              //   insertColumns: 1, // 插入列
-              //   insertRows: 1, // 插入行
-              //   insertHyperlinks: 1, // 插入超链接
-              //   deleteColumns: 1, // 删除列
-              //   deleteRows: 1, // 删除行
-              //   sort: 1, // 排序
-              //   filter: 1, // 使用自动筛选
-              //   usePivotTablereports: 1, // 使用数据透视表和报表
-              //   editObjects: 1, // 编辑对象
-              //   editScenarios: 1, // 编辑方案
-              //   sheet: 1, // 如果为1或true，则该工作表受到保护；如果为0或false，则该工作表不受保护。
-              //   hintText: '', // 弹窗提示的文字
-              //   algorithmName: 'None', // 加密方案：MD2,MD4,MD5,RIPEMD-128,RIPEMD-160,SHA-1,SHA-256,SHA-384,SHA-512,WHIRLPOOL
-              //   saltValue: null, // 密码解密的盐参数，为一个自己定的随机数值
-
-              //   allowRangeList: [{ // 区域保护
-              //     name: 'area', // 名称
-              //     password: '1', // 密码
-              //     hintText: '', // 提示文字
-              //     algorithmName: 'None', // 加密方案：MD2,MD4,MD5,RIPEMD-128,RIPEMD-160,SHA-1,SHA-256,SHA-384,SHA-512,WHIRLPOOL
-              //     saltValue: null, // 密码解密的盐参数，为一个自己定的随机数值
-              //     sqref: '$C$1:$D$5' // 区域范围
-              //   }]
-              // }
-
             },
             scrollLeft: 0, // 左右滚动条位置
             scrollTop: 0, // 上下滚动条位置
@@ -132,8 +101,7 @@ export default {
             zoomRatio: 1, // 缩放比例
             image: [], // 图片
             showGridLines: 1, // 是否显示网格线
-            dataVerification: {}, // 数据验证配置
-            celldata: this.excelList
+            dataVerification: {} // 数据验证配置
           }
 
         ],
@@ -157,19 +125,21 @@ export default {
       this.flag = 'add'
     } else if (this.$route.query.addData) {
       this.optionsData = this.$route.query.addData.content.addData
-      this.excelList = this.$route.query.addData.content.celldata
-      this.title = this.$route.query.addData.modelName
+      // this.optionsData.data[0].celldata = this.$route.query.addData.content.celldata
+      // this.title = this.$route.query.addData.modelName
       // console.log(this.$route.query.addData, '0000')
     } else if (this.$route.query.task) {
       this.optionsData = this.$route.query.task.content.addData
-      this.excelList = this.$route.query.task.content.celldata
-      this.title = this.$route.query.task.modelName
-      // console.log(this.$route.query.task, '0000')
+      // this.optionsData.data[0].celldata = this.$route.query.task.content.celldata
+      // this.title = this.$route.query.task.modelName
+      console.log(this.$route.query.task, '0000')
     } else if (this.$route.query.dealttask) {
+      console.log(this.optionsData, 'shshshshsh')
+      // this.title = this.$route.query.dealttask.modelName
+      console.log(this.$route.query.dealttask, '0000')
       this.optionsData = this.$route.query.dealttask.content.addData
-      this.excelList = this.$route.query.dealttask.content.celldata
-      this.title = this.$route.query.dealttask.modelName
-      // console.log(this.$route.query.dealttask, '0000')
+      // this.optionsData.data[0].celldata = this.$route.query.dealttask.content.celldata
+      console.log(this.optionsData, '0000')
       this.flag = 'task'
       this.taskID = this.$route.query.dealttask.id
     }
@@ -280,7 +250,8 @@ export default {
         const paramsTask = {
           id: this.taskID,
           content: {
-            celldata: this.celldata
+            celldata: this.celldata,
+            addData: luckysheet.toJson()
           }
         }
         dealtTask(paramsTask).then((response) => {
@@ -303,8 +274,7 @@ export default {
             order: 0,
             status: 1,
             celldata: this.celldata,
-            addData: luckysheet.toJson(),
-            authority: luckysheet.getLuckysheetfile()[0].config.authority
+            addData: luckysheet.toJson()
           },
           createUser: localStorage.getItem('userName'),
           status: 1
@@ -328,7 +298,8 @@ export default {
             index: 'sheet_01',
             order: 0,
             status: 1,
-            celldata: this.celldata
+            celldata: this.celldata,
+            addData: luckysheet.toJson()
           },
           createUser: localStorage.getItem('userName'),
           status: 1
