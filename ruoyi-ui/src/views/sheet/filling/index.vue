@@ -17,7 +17,7 @@
       style=""
     />
 
-    <div
+    <!-- <div
       v-show="isMaskShow"
       style="
         position: absolute;
@@ -35,7 +35,7 @@
       "
     >
       Downloading
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -134,12 +134,11 @@ export default {
       // this.title = this.$route.query.task.modelName
       console.log(this.$route.query.task, '0000')
     } else if (this.$route.query.dealttask) {
-      console.log(this.optionsData, 'shshshshsh')
       // this.title = this.$route.query.dealttask.modelName
       console.log(this.$route.query.dealttask, '0000')
       this.optionsData = this.$route.query.dealttask.content.addData
       // this.optionsData.data[0].celldata = this.$route.query.dealttask.content.celldata
-      console.log(this.optionsData, '0000')
+      console.log(this.optionsData, 'option')
       this.flag = 'task'
       this.taskID = this.$route.query.dealttask.id
     }
@@ -181,9 +180,10 @@ export default {
 
           window.luckysheet.create({
             container: 'luckysheet', // luckysheet is the container id
-            showinfobar: false,
+            showinfobar: true,
             data: exportJson.sheets,
             title: exportJson.info.name,
+            lang: 'zh',
             userInfo: exportJson.info.name.creator
           })
         }
@@ -214,7 +214,7 @@ export default {
 
           window.luckysheet.create({
             container: 'luckysheet', // luckysheet is the container id
-            showinfobar: false,
+            showinfobar: true,
             data: exportJson.sheets,
             title: exportJson.info.name,
             userInfo: exportJson.info.name.creator
@@ -317,29 +317,11 @@ export default {
         })
       }
     }
-    // dataUp() {
-    //   window.luckysheet.setDataVerification(
-    //     {
-    //       type: 'number_integer',
-    //       type2: 'gte',
-    //       value1: '1',
-    //       value2: '',
-    //       checked: false,
-    //       remote: false,
-    //       prohibitInput: true,
-    //       hintShow: true,
-    //       hintText: '请输入整数哦'
-    //     },
-    //     {
-    //       range: { row: [1, 100], column: [0, 1] }
-    //     }
-    //   )
-    // }
+
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
@@ -357,13 +339,14 @@ a {
 }
 .hello {
   position: relative;
+  min-height: calc(100vh - 84px)
 }
 #luckysheet {
   margin: 0px;
   padding: 0px;
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: 600px;
+  height: 100%;
   left: 0px;
   /* top: 30px; */
   bottom: 0px;
@@ -377,8 +360,8 @@ a {
   justify-content: center;
   align-items: center;
 }
-.box-down {
-  /* margin-right: -50px; */
+.down-load {
+  width: 200px;
 }
 .saveSheet {
   right: 0;
@@ -386,18 +369,16 @@ a {
 .saveSheet {
   /* margin-left: 80px; */
 }
-/deep/ .luckysheet {
-  /* padding-top: 10px; */
-}
+
 /deep/ .luckysheet_info_detail_update  {
   display: none;
 }
-/deep/ .luckysheet_info_detail_save {
+ /deep/ .luckysheet_info_detail_save {
   display: none;
-}
+} 
 /deep/.luckysheet-share-logo {
   display: none;
-}
+} 
 .logo {
   width: 40px;
   height: 40px;
@@ -405,7 +386,6 @@ a {
   left: 40px;
   top: 10px;
   z-index: 1
-  /* left: -810px; */
 }
 /deep/.fa-angle-left:before {
   display: none;
