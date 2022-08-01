@@ -105,6 +105,10 @@ export default {
           }
 
         ],
+
+        allowUpdate: true,
+        loadUrl: '182.92.241.51:9099/publicApi/excel/downData?id=-1',
+        updateUrl: 'ws://' + '182.92.241.51:9099' + '/excelSocket/' + '[[${userName}]]',
         showsheetbarConfig: { add: false }, // 新增sheet
         hook: {
           workbookCreateAfter: function() {
@@ -125,20 +129,10 @@ export default {
       this.flag = 'add'
     } else if (this.$route.query.addData) {
       this.optionsData = this.$route.query.addData.content.addData
-      // this.optionsData.data[0].celldata = this.$route.query.addData.content.celldata
-      // this.title = this.$route.query.addData.modelName
-      // console.log(this.$route.query.addData, '0000')
     } else if (this.$route.query.task) {
       this.optionsData = this.$route.query.task.content.addData
-      // this.optionsData.data[0].celldata = this.$route.query.task.content.celldata
-      // this.title = this.$route.query.task.modelName
-      console.log(this.$route.query.task, '0000')
     } else if (this.$route.query.dealttask) {
-      // this.title = this.$route.query.dealttask.modelName
-      console.log(this.$route.query.dealttask, '0000')
       this.optionsData = this.$route.query.dealttask.content.addData
-      // this.optionsData.data[0].celldata = this.$route.query.dealttask.content.celldata
-      console.log(this.optionsData, 'option')
       this.flag = 'task'
       this.taskID = this.$route.query.dealttask.id
     }
@@ -375,10 +369,10 @@ a {
 }
  /deep/ .luckysheet_info_detail_save {
   display: none;
-} 
+}
 /deep/.luckysheet-share-logo {
   display: none;
-} 
+}
 .logo {
   width: 40px;
   height: 40px;
